@@ -1,8 +1,11 @@
 from argparse import ArgumentParser
-from _util import pickle_load
+import os
+
 import matplotlib.pyplot as plt
 import seaborn as sns 
-import os
+
+from _util import pickle_load
+
 
 
 def plot(*, dist_type: str, output_uri: str, zoom = False):

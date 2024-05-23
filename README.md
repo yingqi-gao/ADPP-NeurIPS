@@ -12,41 +12,49 @@ To install requirements:
 pip install -r requirements.txt
 ```
 
-We also require R and spatstats package in R. 
+We also require [R](https://cran.r-project.org) along with [spatstats](https://spatstat.org/) and [densityFPCA](https://github.com/jiamingqiu/densityFPCA) packages in R. 
 
-## Training
+## Real data
+
+To preprocess the real FCC AWS-3 Auction Data, download it as a .csv file from this [website](https://www.fcc.gov/auction/97) and run:
+
+```preprocess
+python preprocess.py
+```
+
+## Simulate test information
+
+To generate a fixed test distribution, the corresponding ideal expected per capita revenue, and 100 random samples of 10 test bids each, run this command:
+
+```test
+python test.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI] --r-home R_HOME
+```
+Example - simulation of test bids from a uniform distribution family 
+```example
+python test.py --dist-type real --output-uri /tmp/sim-tests/ --r-home /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library  
+```
+
+## Training of RSRDE(s)
 
 To train the RSRDE(s) in the paper, run this command:
 
 ```train
-python train.py <distribution_type>
-```
-
->📋  Describe how to train the models, with example commands on how to train the models in your paper, including the full training procedure and appropriate hyperparameters.
-
-
-## Test
-To generate the test data and the ideal revenue benchmark in the paper, run this command:
-
-```test
-python test.py <distribution_type>
+python train.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI]
 ```
 
 ## Evaluation
 
-To calculate the average regrets involved in the following 4 mechanisms - DOP, RSOP, RSKDE, and RSRDE, run:
+To calculate the average regrets over 200 random partitions of bids while utilizing the following 4 mechanisms - DOP, RSOP, RSKDE, and RSRDE, run:
 
 ```eval
-python eval.py <distribution_type> <mechanism> <#training_bids> <#training_rounds>
+python eval.py [-h] --dist-type {uniform,normal,exponential,real} --mechanism {DOP,RSOP,RSKDE,RSRDE} [--num-training-bids {100,1000}] [--num-training-rounds {20}] [--output-uri OUTPUT_URI] --r-home R_HOME
 ```
 
 To plot the regrets and compare visually, run:
 
 ```eval
-python plot.py <distribution_type>
+python plot.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI]
 ```
-
->📋  Describe how to evaluate the trained models on benchmarks reported in the paper, give commands that produce the results (section below).
 
 ## Results
 
@@ -59,6 +67,5 @@ Exponential                |Real
 :-------------------------:|:-------------------------:
 ![Boxplots of average regrets for exponential distribution family](./assets/exponential.png) | ![Boxplots of average regrets for real FCC AWS-3 data](./assets/real.png)
 
->📋  Include a table of results from your paper, and link back to the leaderboard for clarity and context. If your main result is a figure, include that figure and link to the command or notebook to reproduce it. 
 
 

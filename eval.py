@@ -1,15 +1,13 @@
-import random
 from argparse import ArgumentParser
-from functools import partial
-from _pricing_utils import get_epc_rev
-import numpy as np
 from typing import Callable
-from _pricing_mechanisms import DOP, RSOP, RSKDE
-from _util import pickle_load, pickle_dump, get_regrets_uri, TEST_REPETITIONS, PARTITION_REPETITIONS
-import sys
-from _pricing_mechanisms import RSRDE
-
 import os
+
+import numpy as np
+
+from _pricing_utils import get_epc_rev
+from _pricing_mechanisms import DOP, RSOP, RSKDE, RSRDE
+from _util import pickle_load, pickle_dump, get_regrets_uri, TEST_REPETITIONS, PARTITION_REPETITIONS
+
 
 
 def get_RSRDE_regrets(*, dist_type: str, num_training_bids: int, num_training_rounds: int,
