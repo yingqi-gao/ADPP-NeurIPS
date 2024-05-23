@@ -12,6 +12,8 @@ To install requirements:
 pip install -r requirements.txt
 ```
 
+We also require R and spatstats package in R. 
+
 ## Training
 
 To train the RSRDE(s) in the paper, run this command:
