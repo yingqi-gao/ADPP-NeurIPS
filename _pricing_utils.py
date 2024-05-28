@@ -16,13 +16,16 @@ def opt(bids: dict) -> float:
     - Optimal sale price (float).
     """
     # Step 1: Sort bids in descending order
-    sorted_bids = dict(sorted(bids.items(), key = lambda item: item[1], reverse = True))
-    
+    sorted_bids = dict(sorted(bids.items(), key=lambda item: item[1], reverse=True))
+
     # Step 2: Calculate revenues based on each bid
-    revenues = {bidder: (index + 1) * bid for index, (bidder, bid) in enumerate(sorted_bids.items())}
+    revenues = {
+        bidder: (index + 1) * bid
+        for index, (bidder, bid) in enumerate(sorted_bids.items())
+    }
 
     # Step 3: Locate the maximum revenue according to the bidder
-    max_bidder = max(revenues, key = revenues.get)
+    max_bidder = max(revenues, key=revenues.get)
 
     # Step 4: Backtrack the optimal price
     price = bids[max_bidder]
@@ -31,9 +34,8 @@ def opt(bids: dict) -> float:
     return price
 
 
-
 # Partition a dictionary
-def dict_part(input_dict, random_seed, prop = 0.5):
+def dict_part(input_dict, random_seed, prop=0.5):
     """
     Partitions a disctionary into two.
 
@@ -52,7 +54,9 @@ def dict_part(input_dict, random_seed, prop = 0.5):
     dict1_size = int(len(keys) * prop)
 
     # Randomly sample keys for the first partition
-    random.seed(random_seed) # to make sure all pricing mechanisms are compared based on the same bids partition
+    random.seed(
+        random_seed
+    )  # to make sure all pricing mechanisms are compared based on the same bids partition
     dict1_keys = random.sample(keys, dict1_size)
 
     # Create the first partition
@@ -62,7 +66,6 @@ def dict_part(input_dict, random_seed, prop = 0.5):
     dict2 = {key: input_dict[key] for key in keys if key not in dict1_keys}
 
     return dict1, dict2
-
 
 
 # Calculated the expected per capita revenue - p(1-F(p))
@@ -82,9 +85,8 @@ def get_epc_rev(price, *, value_cdf):
     return price * (1 - value_cdf(price))
 
 
-
 # Find the maximum expected per capita revenue - max_p p(1-F(p))
-def max_epc_rev(value_cdf, lower, upper, basinhopping_needed = False):
+def max_epc_rev(value_cdf, lower, upper, basinhopping_needed=False):
     """
     Maximizes the expected per capita revenue, i.e., max_p p(1 - F(p)).
 
@@ -99,16 +101,18 @@ def max_epc_rev(value_cdf, lower, upper, basinhopping_needed = False):
     - Optimal expected per capita revenue (maximum) (float).
     """
     # Step 1: Wrap get_epc_rev with the given value cdf and extra arguments if any
-    wrapped_get_epc_rev = partial(get_epc_rev, value_cdf = value_cdf)
+    wrapped_get_epc_rev = partial(get_epc_rev, value_cdf=value_cdf)
 
     # Step 2: Maximization
     if not basinhopping_needed:
-        results = minimize_scalar(lambda x: -wrapped_get_epc_rev(x), 
-                                  method='bounded', 
-                                  bounds = (lower, upper))
+        results = minimize_scalar(
+            lambda x: -wrapped_get_epc_rev(x), method="bounded", bounds=(lower, upper)
+        )
     else:
+
         class RandomDisplacementBounds(object):
             """random displacement with bounds"""
+
             def __init__(self, xmin, xmax, stepsize=0.5):
                 self.xmin = xmin
                 self.xmax = xmax
@@ -118,15 +122,19 @@ def max_epc_rev(value_cdf, lower, upper, basinhopping_needed = False):
                 """take a random step but ensure the new position is within the bounds"""
                 while True:
                     # this could be done in a much more clever way, but it will work for example purposes
-                    xnew = x + np.random.uniform(-self.stepsize, self.stepsize, np.shape(x))
+                    xnew = x + np.random.uniform(
+                        -self.stepsize, self.stepsize, np.shape(x)
+                    )
                     if np.all(xnew < self.xmax) and np.all(xnew > self.xmin):
                         break
                 return xnew
-        results = basinhopping(lambda x: -wrapped_get_epc_rev(x), 
-                               x0 = lower + 0.1, 
-                               minimizer_kwargs = {"method": "L-BFGS-B",
-                                                   "bounds": [(lower, upper)]}, 
-                               take_step = RandomDisplacementBounds(lower, upper))
+
+        results = basinhopping(
+            lambda x: -wrapped_get_epc_rev(x),
+            x0=lower + 0.1,
+            minimizer_kwargs={"method": "L-BFGS-B", "bounds": [(lower, upper)]},
+            take_step=RandomDisplacementBounds(lower, upper),
+        )
     price = results.x
     revenue = -results.fun
     if price < lower or price > upper:
@@ -134,7 +142,9 @@ def max_epc_rev(value_cdf, lower, upper, basinhopping_needed = False):
     if revenue < 0:
         raise ValueError("Revenue can never be negative!")
     if revenue == 0:
-        price, revenue = max_epc_rev(value_cdf = value_cdf, lower = lower, upper = upper, basinhopping_needed = True)
-        
+        price, revenue = max_epc_rev(
+            value_cdf=value_cdf, lower=lower, upper=upper, basinhopping_needed=True
+        )
+
     # Return
-    return price, revenue 
+    return price, revenue

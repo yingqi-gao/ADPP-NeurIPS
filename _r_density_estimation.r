@@ -12,13 +12,14 @@ kde_r <- function(test_obs_at_t, lower, upper) {
   #' Return:
   #' The estimated cdf function.
   ###
-  options(warn=-1)
-  library(spatstat)
+  options(warn = -1)
 
-  return(CDF(density(test_obs_at_t,
-                     bw = "SJ",
-                     from = lower,
-                     to = upper)))
+  return(spatstat.explore::CDF(density(
+    test_obs_at_t,
+    bw = "SJ",
+    from = lower,
+    to = upper
+  )))
 }
 
 
@@ -47,7 +48,7 @@ rde_training_r <- function(train_hist,
   #' - max_k (int): Maximum number of functional principal components to use.
   #' - fpca_den_fam_pdf (function): Estimated pdf function of the family.
   ###
-  options(warn=-1)
+  options(warn = -1)
   library(densityFPCA)
 
 
@@ -76,7 +77,7 @@ rde_training_r <- function(train_hist,
   # Step 3: Transform the density functions into Hilbert space
   #         via centered log transformation (centered log-ratio)
   # 1) Calculate the constant to use for centering
-  tm_c <- normL2(rep(1, grid_size), grid = grid) ^ 2
+  tm_c <- normL2(rep(1, grid_size), grid = grid)^2
 
   # 2) Transform into Hilbert space
   ls_tm <- toHilbert(
@@ -114,9 +115,11 @@ rde_training_r <- function(train_hist,
 
 
   # Return
-  return(list(fpca_res = fpca_res,
-              max_k = max_k,
-              fpca_den_fam_pdf = fpca_den_fam$pdf))
+  return(list(
+    fpca_res = fpca_res,
+    max_k = max_k,
+    fpca_den_fam_pdf = fpca_den_fam$pdf
+  ))
 }
 
 
@@ -139,7 +142,7 @@ rde_testing_r <- function(test_obs_at_t,
   #' Return:
   #' - est_cdf (function): The estimated cdf function.
   ###
-  options(warn=-1)
+  options(warn = -1)
   library(densityFPCA)
 
   # Handle training results.
@@ -171,9 +174,10 @@ rde_testing_r <- function(test_obs_at_t,
   # 4) Consruct estimated cdf from pdf
   est_cdf <- function(x) {
     value <- integrate(est_pdf,
-                       lower = lower,
-                       upper = x,
-                       stop.on.error = FALSE)$value
+      lower = lower,
+      upper = x,
+      stop.on.error = FALSE
+    )$value
     return(value)
   }
 

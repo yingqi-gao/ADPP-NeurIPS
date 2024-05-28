@@ -3,7 +3,6 @@ from _py_density_estimation import kde_py, rde_testing_py
 import numpy as np
 
 
-
 def DOP(bids):
     """
     Runs a deterministic optimal price auction.
@@ -25,7 +24,6 @@ def DOP(bids):
             return price_bidder
 
 
-
 def RSOP(bids, *, random_seed):
     """
     Runs a random sampling optimal price auction.
@@ -43,7 +41,6 @@ def RSOP(bids, *, random_seed):
     price2 = opt(group2)
 
     return max(price1, price2)
-
 
 
 def RSKDE(bids, *, lower, upper, random_seed):
@@ -73,13 +70,12 @@ def RSKDE(bids, *, lower, upper, random_seed):
 
     # Return
     if price1 > price2:
-        return price1, np.array([cdf1(x) for x in np.linspace(lower, upper, num = 1024)])
+        return price1, np.array([cdf1(x) for x in np.linspace(lower, upper, num=1024)])
     else:
-        return price2, np.array([cdf2(x) for x in np.linspace(lower, upper, num = 1024)])
+        return price2, np.array([cdf2(x) for x in np.linspace(lower, upper, num=1024)])
 
 
-
-def RSRDE(bids, *, lower, upper, random_seed, method = "MLE", training_results):
+def RSRDE(bids, *, lower, upper, random_seed, method="MLE", training_results):
     """
     Runs a random sampling repeated density estimation auction.
 
@@ -94,27 +90,30 @@ def RSRDE(bids, *, lower, upper, random_seed, method = "MLE", training_results):
     Returns:
     - Auction price (float).
     - Estimated cdfs (tuple[Callable, Callable]).
-    """ 
+    """
     # Step 1: Partition bids into two groups.
     group1, group2 = dict_part(bids, random_seed)
 
     # Step 2: Estimate density within each group.
-    cdf1 = rde_testing_py(test_obs_at_t = [*group1.values()], 
-                          method = method,
-                          lower = lower,
-                          training_results = training_results)
-    cdf2 = rde_testing_py(test_obs_at_t = [*group2.values()], 
-                          method = method,
-                          lower = lower,
-                          training_results = training_results)
-    
+    cdf1 = rde_testing_py(
+        test_obs_at_t=[*group1.values()],
+        method=method,
+        lower=lower,
+        training_results=training_results,
+    )
+    cdf2 = rde_testing_py(
+        test_obs_at_t=[*group2.values()],
+        method=method,
+        lower=lower,
+        training_results=training_results,
+    )
+
     # Step 3: Find the optimal estimated price for each group.
     price1, rev1 = max_epc_rev(cdf1, lower, upper)
     price2, rev2 = max_epc_rev(cdf2, lower, upper)
-    
+
     # Return
     if price1 > price2:
-        return price1, np.array([cdf1(x) for x in np.linspace(lower, upper, num = 1024)])
+        return price1, np.array([cdf1(x) for x in np.linspace(lower, upper, num=1024)])
     else:
-        return price2, np.array([cdf2(x) for x in np.linspace(lower, upper, num = 1024)])
-
+        return price2, np.array([cdf2(x) for x in np.linspace(lower, upper, num=1024)])
