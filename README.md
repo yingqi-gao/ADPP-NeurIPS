@@ -39,7 +39,7 @@ python test.py --dist-type real --output-uri /tmp/sim-tests/ --r-home /Library/F
 To train the RSRDE(s) in the paper, run this command:
 
 ```train
-python train.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI]
+python train.py [-h] --dist-type {uniform,normal,exponential,real} --num-training-bids NUM_TRAINING_BIDS --num-training-rounds NUM_TRAINING_ROUNDS [--output-uri OUTPUT_URI] --r-home R_HOME
 ```
 
 ## Evaluation
@@ -47,12 +47,12 @@ python train.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri
 To calculate the average regrets over 200 random partitions of bids while utilizing the following 4 mechanisms - DOP, RSOP, RSKDE, and RSRDE, run:
 
 ```eval
-python eval.py [-h] --dist-type {uniform,normal,exponential,real} --mechanism {DOP,RSOP,RSKDE,RSRDE} [--num-training-bids {100,1000}] [--num-training-rounds {20}] [--output-uri OUTPUT_URI] --r-home R_HOME
+python eval.py [-h] --dist-type {uniform,normal,exponential,real} --mechanism {DOP,RSOP,RSKDE,RSRDE} [--num-training-bids NUM_TRAINING_BIDS] [--num-training-rounds NUM_TRAINING_ROUNDS] [--output-uri OUTPUT_URI] --r-home R_HOME
 ```
 
 To plot the regrets and compare visually, run:
 
-```eval
+```plot
 python plot.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI]
 ```
 
