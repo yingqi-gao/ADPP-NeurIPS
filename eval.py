@@ -67,7 +67,6 @@ def get_RSRDE_regrets(
             regrets_means[key] = np.mean(regrets)
             pickle_dump(regrets_means, regrets_uri)
         print(f"Done with round {key}")
-        break
 
 
 def eval(

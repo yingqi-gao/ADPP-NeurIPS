@@ -39,7 +39,7 @@ python test.py --dist-type real --output-uri /tmp/sim-tests/ --r-home /Library/F
 To train the RSRDE(s) in the paper, run this command:
 
 ```train
-python train.py [-h] --dist-type {uniform,normal,exponential,real} --num-training-bids NUM_TRAINING_BIDS --num-training-rounds NUM_TRAINING_ROUNDS [--output-uri OUTPUT_URI] --r-home R_HOME
+python train.py [-h] --dist-type {uniform,normal,exponential,real} --num-training-bids NUM_TRAINING_BIDS --num-training-rounds NUM_TRAINING_ROUNDS [--output-uri OUTPUT_URI]
 ```
 
 ## Evaluation

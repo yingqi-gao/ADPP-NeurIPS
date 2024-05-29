@@ -80,17 +80,11 @@ def parse_args():
     parser.add_argument("--num-training-bids", required=True, type=int)
     parser.add_argument("--num-training-rounds", required=True, type=int)
     parser.add_argument("--output-uri", default="./sim/")
-    parser.add_argument(
-        "--r-home",
-        required=True,
-        help="Get your R_HOME path via running .libPaths() in R terminal.",
-    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    os.environ["R_HOME"] = args.r_home
     dist_type = args.dist_type
     num_training_bids = args.num_training_bids
     num_training_rounds = args.num_training_rounds
