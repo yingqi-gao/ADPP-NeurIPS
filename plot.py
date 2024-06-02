@@ -19,8 +19,6 @@ def plot(*, dist_type: str, output_uri: str, zoom=False):
                 data = list(data.values())
             regrets[name] = data
 
-    print(regrets)
-
     # generate figures
     fig = plt.figure(figsize=(8, 5), dpi=100)
     ax1 = fig.add_subplot()
