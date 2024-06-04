@@ -77,6 +77,12 @@ def eval(
     num_training_rounds: int | None = None,
     output_uri: str,
 ):
+    lower = 1
+    upper = 10
+    if dist_type == "real":
+        lower = 6.9
+        upper = 20.6
+        
     tests = pickle_load(os.path.join(output_uri, dist_type, "tests.pkl"))
     regrets_uri = get_regrets_uri(
         output_uri=output_uri,
@@ -114,8 +120,8 @@ def eval(
             for seed in range(PARTITION_REPETITIONS):
                 RSKDE_price, _ = RSKDE(
                     dict(zip(range(10), test_bids[i])),
-                    lower=1,
-                    upper=10,
+                    lower=lower,
+                    upper=upper,
                     random_seed=seed,
                 )
                 regret = ideal_revenue - get_epc_rev(
