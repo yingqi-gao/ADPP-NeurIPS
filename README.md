@@ -53,7 +53,7 @@ python eval.py [-h] --dist-type {uniform,normal,exponential,real} --mechanism {D
 To plot the regrets and compare visually, run:
 
 ```plot-code
-python plot.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI]
+plot.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_URI] [--zoom {Yes,No}]
 ```
 
 ## Results
