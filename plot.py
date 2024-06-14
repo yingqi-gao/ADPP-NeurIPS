@@ -24,14 +24,25 @@ def plot(*, dist_type: str, output_uri: str, zoom=False):
     ax1 = fig.add_subplot()
 
     sns.boxplot(list(regrets.values()), palette="Set2")
-    plt.xticks(range(len(regrets.keys())), list(regrets.keys()))
+    labels = [
+        key.replace("_", "__", 1).replace("__", "\n", 1) for key in regrets.keys()
+    ]
+    plt.xticks(range(len(labels)), labels)
     if zoom:
         ax2 = fig.add_axes([0.5, 0.5, 0.395, 0.37])
         sns.boxplot(
-            [regrets["RSRDE_100_20"], regrets["RSRDE_100_20"]],
-            palette=sns.color_palette("Set2")[3:5],
+            [
+                regrets["RSRDE_1000_20"],
+                regrets["RSRDE_1000_200"],
+                regrets["RSRDE_100_20"],
+                regrets["RSRDE_100_200"],
+            ],
+            palette=sns.color_palette("Set2")[3:7],
         )
-        plt.xticks([0, 1], ["RSRDE\n100-20", "RSRDE\n1000-20"])
+        plt.xticks(
+            [0, 1, 2, 3],
+            ["RSRDE\n1000-20", "RSRDE\n1000-200", "RSRDE\n100-20", "RSRDE\n100-200"],
+        )
 
     # save and show figures
     plt.savefig(os.path.join(output_uri, f"{dist_type}.png"), bbox_inches="tight")
@@ -47,12 +58,17 @@ def parse_args():
         choices=["uniform", "normal", "exponential", "real"],
     )
     parser.add_argument("--output-uri", default="./sim/")
+    parser.add_argument(
+        "--zoom", help="Should we zoom in for RSRDE regrets?", choices=["Yes", "No"]
+    )
     return parser.parse_args()
 
 
 def main():
     args = parse_args()
-    plot(dist_type=args.dist_type, output_uri=args.output_uri)
+    plot(
+        dist_type=args.dist_type, output_uri=args.output_uri, zoom=(args.zoom == "Yes")
+    )
 
 
 if __name__ == "__main__":
