@@ -61,7 +61,7 @@ plot.py [-h] --dist-type {uniform,normal,exponential,real} [--output-uri OUTPUT_
 Our model achieves the following performance on :
 Uniform                    |Normal
 :-------------------------:|:-------------------------:
-![Boxplots of average regrets for uniform distribution family](./assets/uniform.png) | ![Boxplots of average regrets for normal distribution family](./assets/normal.png)
+![Boxplots of average regrets for uniform distribution family](./assets/uniform.png)         | ![Boxplots of average regrets for normal distribution family](./assets/normal.png)
 
 Exponential                |Real
 :-------------------------:|:-------------------------:
